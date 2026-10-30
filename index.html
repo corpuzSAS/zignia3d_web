@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zignia 3D · Digital Creation Studio</title>
+  <meta name="description" content="Impresión 3D de alta precisión, diseño personalizado y envíos a todo el país.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============ 1. COLORES DE LA MARCA ============ */
+    :root {
+      --bg:      #05060f;
+      --surface: #0b0d1c;
+      --line:    rgba(255, 255, 255, .08);
+      --text:    #f5f5f7;
+      --muted:   #9a9db3;
+      --cyan:    #22c7ff;
+      --blue:    #2f6bff;
+      --purple:  #8b3dff;
+      --orange:  #ff9a2e;
+      --wa:      #25d366;
+      --grad:    linear-gradient(135deg, var(--cyan), var(--blue) 45%, var(--purple));
+    }
+
+    /* ============ 2. BASE ============ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+    .container { width: min(1120px, 92%); margin-inline: auto; }
+
+    /* ============ 3. NAVEGACIÓN ============ */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: saturate(180%) blur(18px);
+      background: color-mix(in srgb, var(--bg) 72%, transparent); border-bottom: 1px solid var(--line);
+    }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .02em; }
+    .brand img { height: 30px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 22px; }
+    .nav a.link { font-size: .85rem; color: var(--muted); transition: color .2s; }
+    .nav a.link:hover { color: var(--text); }
+    .cart-btn {
+      position: relative; display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: .85rem;
+      transition: border-color .2s;
+    }
+    .cart-btn:hover { border-color: var(--cyan); }
+    .cart-count {
+      min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+      background: var(--grad); font-size: .72rem; font-weight: 700;
+      display: grid; place-items: center;
+    }
+
+    /* ============ 4. HERO ============ */
+    .hero { position: relative; text-align: center; padding: 120px 0 100px; overflow: hidden; }
+    .hero::before, .hero::after {
+      content: ""; position: absolute; width: 520px; height: 520px;
+      border-radius: 50%; filter: blur(120px); opacity: .28; z-index: -1;
+    }
+    .hero::before { background: var(--orange); left: -220px; top: -80px; }
+    .hero::after  { background: var(--blue);   right: -220px; top: 40px; }
+
+   
+    .hero-logo { height: 120px; margin: 0 auto 28px; }
+
+    .eyebrow { font-size: .8rem; letter-spacing: .32em; text-transform: uppercase; color: var(--cyan); }
+    .hero h1 { font-size: clamp(2.6rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.04; margin: 18px 0; }
+    .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p.sub { color: var(--muted); font-size: clamp(1rem, 2vw, 1.3rem); max-width: 560px; margin: 0 auto 36px; font-weight: 300; }
+
+    .btn {
+      display: inline-block; padding: 13px 28px; border-radius: 999px;
+      font-weight: 600; font-size: .95rem; background: var(--grad);
+      box-shadow: 0 8px 30px color-mix(in srgb, var(--blue) 35%, transparent);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 40px color-mix(in srgb, var(--purple) 50%, transparent); }
+
+    /* ----- Hero animado: la Z flota detrás del título ----- */
+    .hero .container { position: relative; z-index: 1; }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      display: grid; place-items: center;
+      transform: translate3d(0, var(--py, 0px), 0);          /* parallax al hacer scroll */
+      -webkit-mask-image: linear-gradient(#000 55%, transparent 100%);
+              mask-image: linear-gradient(#000 55%, transparent 100%);
+    }
+    .hero-z {
+      width: min(640px, 80vw); opacity: .2;                   /* sube/baja el número para más o menos presencia */
+      transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transition: transform .25s ease-out;
+    }
+    .hero-z svg { width: 100%; height: auto; display: block; animation: float 9s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(-10px); } 50% { transform: translateY(14px); } }
+    @keyframes breathe { 0%, 100% { opacity: .22; } 50% { opacity: .36; } }
+    .hero::before, .hero::after { animation: breathe 7s ease-in-out infinite; }
+    .hero::after { animation-delay: -3.5s; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-z svg, .hero::before, .hero::after { animation: none; }
+      .hero-bg { transform: none; }
+    }
+
+    /* ============ TEMAS DE TEMPORADA ============
+       Cada tema SOLO cambia las variables de color de la página.
+       ► PARA CREAR UN TEMA NUEVO (ej. "San Valentín"):
+         1) Copia uno de los bloques de abajo y cambia el nombre:  [data-theme="sanvalentin"]
+         2) Cambia los colores.
+         3) Añade su entrada en la lista "themes" del script (textos, fechas, partículas).
+       Variables:  --bg fondo · --surface tarjetas · --cyan acento claro / etiquetas
+                   --blue y --purple resplandor y degradado · --orange nombres de producto y resplandor
+                   --grad degradado de botones y títulos */
+    [data-theme="halloween"] {
+      --bg: #07040d;  --surface: #120a1d;
+      --cyan: #ff8a1f;  --blue: #8b2cff;  --purple: #c13bff;  --orange: #ff8a1f;
+      --grad: linear-gradient(135deg, #ff8a1f, #c13bff 55%, #6d28ff);
+    }
+    [data-theme="navidad"] {
+      --bg: #050a08;  --surface: #0b1511;
+      --cyan: #ffd36b;  --blue: #e5383b;  --purple: #1fa855;  --orange: #ffc247;
+      --grad: linear-gradient(135deg, #ff4d4f, #ff8a3d 55%, #ffc247);
+    }
+
+    /* Partículas del tema (murciélagos, copos de nieve...) */
+    .fx { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+    .fx span {
+      position: absolute; top: 0; left: var(--x); font-size: var(--s); opacity: 0;
+      animation: fall var(--d) linear var(--delay) infinite;
+    }
+    .fx.rise span { animation-name: rise; }
+    @keyframes fall {
+      0%   { transform: translate3d(0, -10vh, 0) rotate(0);               opacity: 0; }
+      10%, 85% { opacity: .55; }
+      100% { transform: translate3d(var(--sway), 110vh, 0) rotate(300deg); opacity: 0; }
+    }
+    @keyframes rise {
+      0%   { transform: translate3d(0, 110vh, 0) rotate(0);                opacity: 0; }
+      10%, 85% { opacity: .5; }
+      100% { transform: translate3d(var(--sway), -10vh, 0) rotate(-40deg); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { .fx { display: none; } }
+
+    /* Barra de anuncio del tema (arriba de todo) */
+    .promo { padding: 9px 16px; text-align: center; font-size: .85rem; background: var(--grad); color: #fff; font-weight: 500; }
+    .promo[hidden] { display: none; }
+
+    /* Panel para probar temas (solo se ve con  ?admin  al final del enlace) */
+    .theme-panel {
+      position: fixed; left: 16px; bottom: 16px; z-index: 40; display: flex; gap: 6px; padding: 8px;
+      border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(14px);
+    }
+    .theme-panel button { padding: 7px 14px; border-radius: 999px; font-size: .8rem; color: var(--muted); }
+    .theme-panel button.active { background: var(--grad); color: #fff; }
+
+    /* ============ 5. BENEFICIOS ============ */
+    .perks { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; padding-bottom: 100px; }
+    .perk { padding: 26px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); }
+    .perk strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+    .perk span { color: var(--muted); font-size: .9rem; }
+
+    /* ============ 6. CATÁLOGO ============ */
+    .section-title { text-align: center; margin-bottom: 36px; }
+    .section-title h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 7000; letter-spacing: -.03em; }
+    .section-title p { color: var(--muted); margin-top: 8px; }
+
+    .search { max-width: 420px; margin: 0 auto 20px; }
+    .search input {
+      width: 100%; padding: 14px 22px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--surface);
+      color: var(--text); font: inherit; outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .search input::placeholder { color: var(--muted); }
+    .search input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 12%, transparent); }
+
+    /* Filtros por categoría */
+    .filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 48px; }
+    .filter {
+      padding: 9px 20px; border-radius: 999px; font-size: .88rem; font-weight: 500;
+      border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+      transition: color .2s, border-color .2s, background .25s, box-shadow .25s;
+    }
+    .filter:hover { color: var(--text); border-color: color-mix(in srgb, var(--cyan) 50%, transparent); }
+    .filter.active { background: var(--grad); border-color: transparent; color: #fff; box-shadow: 0 6px 22px color-mix(in srgb, var(--blue) 35%, transparent); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-bottom: 60px; }
+    .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px 0; }
+
+    .card {
+      position: relative; padding: 28px 24px 26px; text-align: center;
+      border: 1px solid var(--line); border-radius: 28px;
+      background: linear-gradient(180deg, var(--surface), var(--bg));
+      transition: transform .4s cubic-bezier(.2, .8, .2, 1), border-color .4s, box-shadow .4s;
+    }
+    .card:hover { transform: translateY(-8px); border-color: color-mix(in srgb, var(--cyan) 40%, transparent); box-shadow: 0 24px 60px color-mix(in srgb, var(--blue) 22%, transparent); }
+
+    .stage { position: relative; height: 230px; display: grid; place-items: center; margin-bottom: 8px; }
+    .stage::after {
+      content: ""; position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+      width: 78%; height: 34px; border-radius: 50%;
+      background: radial-gradient(ellipse at center, color-mix(in srgb, var(--cyan) 85%, transparent), color-mix(in srgb, var(--blue) 35%, transparent) 55%, transparent 72%);
+      filter: blur(2px);
+    }
+    .stage img {
+      position: relative; z-index: 1; max-height: 200px; object-fit: contain;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .55));
+      transition: transform .5s cubic-bezier(.2, .8, .2, 1);
+    }
+    .card:hover .stage img { transform: scale(1.07) translateY(-4px); }
+
+    .card h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; color: var(--orange); }
+    .card .tagline { color: var(--muted); font-size: .92rem; margin: 4px 0 18px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+      border: 1px solid color-mix(in srgb, var(--purple) 50%, transparent); border-radius: 999px;
+      font-size: .8rem; color: var(--muted); background: color-mix(in srgb, var(--purple) 8%, transparent);
+    }
+    .chip b { color: var(--cyan); font-weight: 700; }
+    .price { margin-top: 20px; font-size: 1.7rem; font-weight: 700; letter-spacing: -.02em; }
+    .price small { font-size: .75rem; color: var(--muted); font-weight: 500; margin-left: 4px; }
+
+    .card-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 18px; }
+    .add {
+      padding: 11px; border-radius: 14px; background: var(--grad);
+      font-size: .9rem; font-weight: 600; transition: transform .2s, filter .2s;
+    }
+    .add:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .add.done { background: var(--wa); }
+    .ask {
+      display: grid; place-items: center; padding: 0 16px; border-radius: 14px;
+      border: 1px solid var(--line); font-size: .85rem; color: var(--muted);
+      transition: color .2s, border-color .2s;
+    }
+    .ask:hover { color: var(--text); border-color: var(--wa); }
+
+    /* ============ 7. DISEÑO PERSONALIZADO ============ */
+    .custom {
+      margin-bottom: 120px; padding: 64px 28px; text-align: center;
+      border: 1px solid var(--line); border-radius: 32px;
+      background: radial-gradient(ellipse at top left, color-mix(in srgb, var(--orange) 14%, transparent), transparent 55%),
+                  radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--blue) 20%, transparent), transparent 55%), var(--surface);
+    }
+    .custom h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -.03em; }
+    .custom p { color: var(--muted); max-width: 480px; margin: 12px auto 28px; }
+
+    /* ============ 8. CARRITO (panel lateral) ============ */
+    .overlay {
+      position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .55);
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 31;
+      width: min(400px, 100%); display: flex; flex-direction: column;
+      background: var(--surface); border-left: 1px solid var(--line);
+      transform: translateX(100%); transition: transform .4s cubic-bezier(.2, .8, .2, 1);
+    }
+    .drawer.open { transform: none; }
+    .drawer header { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px; border-bottom: 1px solid var(--line); }
+    .drawer header h3 { font-size: 1.15rem; }
+    .close { font-size: 1.5rem; color: var(--muted); line-height: 1; }
+    .items { flex: 1; overflow-y: auto; padding: 8px 22px; }
+    .item { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .item img { width: 56px; height: 56px; object-fit: contain; border-radius: 12px; background: var(--bg); }
+    .item b { display: block; font-size: .95rem; }
+    .item small { color: var(--muted); }
+    .qty { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .qty button { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); line-height: 1; }
+    .qty button:hover { border-color: var(--cyan); }
+    .cart-empty { text-align: center; color: var(--muted); padding: 60px 0; }
+    .drawer footer { padding: 20px 22px; border-top: 1px solid var(--line); }
+    .total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
+    .checkout {
+      display: block; width: 100%; padding: 14px; border-radius: 14px; text-align: center;
+      background: var(--wa); color: #04210f; font-weight: 700;
+    }
+    .checkout[aria-disabled="true"] { opacity: .4; pointer-events: none; }
+
+    /* ============ 9. BOTÓN FLOTANTE WHATSAPP ============ */
+    .wa-float {
+      position: fixed; right: 20px; bottom: 20px; z-index: 15;
+      width: 56px; height: 56px; border-radius: 50%; background: var(--wa);
+      display: grid; place-items: center; box-shadow: 0 10px 30px rgba(37, 211, 102, .4);
+      transition: transform .25s;
+    }
+    .wa-float:hover { transform: scale(1.1); }
+    .wa-float svg { width: 28px; height: 28px; fill: #fff; }
+
+    /* ============ 10. FOOTER ============ */
+    footer.site { border-top: 1px solid var(--line); padding: 40px 0; text-align: center; color: var(--muted); font-size: .85rem; }
+    footer.site strong { color: var(--text); }
+
+    /* ============ 11. ANIMACIÓN AL HACER SCROLL ============ */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s, transform .8s cubic-bezier(.2, .8, .2, 1); }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      * { scroll-behavior: auto !important; }
+    }
+    .social-links{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+.social-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:10px 18px;
+
+    border-radius:50px;
+
+    text-decoration:none;
+    color:rgb(167, 160, 167);
+
+    background:rgba(255,255,255,0.08);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    transition:all .3s ease;
+}
+
+.social-pill:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+.tiktok:hover{
+    box-shadow:
+    0 0 10px #25F4EE,
+    0 0 20px #25F4EE;
+}
+
+.insta:hover{
+    box-shadow:
+    0 0 10px #E4405F,
+    0 0 20px #E4405F;
+}
+  </style>
+</head>
+
+<body>
+  <!-- Barra de anuncio: se llena sola según el tema activo -->
+  <div class="promo" id="promo" hidden></div>
+
+
+  <!-- ============ NAVEGACIÓN ============ -->
+  <nav class="nav">
+    <div class="container">
+      <a href="#" class="brand">
+        <!-- >>> AQUÍ VA TU LOGO PEQUEÑO (la "Z"): cambia la ruta en src <<< -->
+        <img src="img/z-encabezado.png" alt="Zignia 3D" onerror="this.style.display='none'">
+        
+      </a>
+      <div class="nav-right">
+        <a href="#catalogo" class="link">Catálogo</a>
+        <a href="#personalizado" class="link">Personalizado</a>
+        <button class="cart-btn" id="openCart" aria-label="Abrir carrito">
+          Carrito <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <!-- Fondo animado del hero (la Z de la marca). Para usar tu propia imagen en su lugar,
+         reemplaza todo el <svg> por:  <img src="img/banner.png" alt=""> -->
+    <div class="hero-bg" id="heroBg" aria-hidden="true">
+      <div class="hero-z" id="heroZ">
+        <svg viewBox="40 30 1105 945" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hz-fill" gradientUnits="userSpaceOnUse" x1="520" y1="40" x2="640" y2="960">
+              <stop offset="0" style="stop-color:var(--cyan)"/><stop offset=".45" style="stop-color:var(--blue)"/><stop offset="1" style="stop-color:var(--purple)"/>
+            </linearGradient>
+            <filter id="hz-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+          </defs>
+          <polygon points="120,245 1090,48 680,722 885,665 1120,955 65,955 487,392 285,455" fill="url(#hz-fill)" filter="url(#hz-soft)" opacity=".6"/>
+          <polygon points="120,245 1090,48 680,722 885,665 1120,955 65,955 487,392 285,455" fill="url(#hz-fill)"/>
+          <polygon points="938,168 555,468 230,860" style="fill:var(--bg)" opacity=".92"/>
+          <polygon points="120,245 1090,48 940,160 370,335" fill="#fff" opacity=".22"/>
+          <polygon points="120,245 370,335 285,455" fill="#000" opacity=".18"/>
+          <polygon points="938,168 555,468 528,438 487,392" fill="#fff" opacity=".2"/>
+          <polygon points="1090,48 680,722 625,672 1000,90" fill="#fff" opacity=".16"/>
+          <polygon points="625,672 680,722 240,860 230,860" fill="#000" opacity=".2"/>
+          <polygon points="680,722 885,665 822,802" fill="#fff" opacity=".3"/>
+          <polygon points="885,665 1120,955 822,802" fill="#ff7bf0" opacity=".3"/>
+          <polygon points="65,955 1120,955 822,802" fill="#000" opacity=".22"/>
+        </svg>
+      </div>
+    </div>
+    <div class="container">
+      
+     <!-- <img class="hero-logo" src="img/logo.jpeg" alt="Zignia 3D">-->
+      <p class="eyebrow" id="heroEyebrow">Digital Creation Studio</p>
+      <h1><span id="heroTitle1">Ideas en 3D.</span><br><span class="grad-text" id="heroTitle2">Posibilidades infinitas.</span></h1>
+      <p class="sub" id="heroSub">Impresión 3D de alta precisión, diseño personalizado y envíos a todo el país.</p>
+      <a href="#catalogo" class="btn">Ver catálogo</a>
+    </div>
+  </header>
+
+  <!-- ============ BENEFICIOS ============ -->
+  <section class="container perks reveal">
+    <div class="perk"><strong>Impresión 3D</strong><span>De alta precisión</span></div>
+    <div class="perk"><strong>Diseño personalizado</strong><span>Hecho a tu medida</span></div>
+    <div class="perk"><strong>Envíos</strong><span>A todo el país</span></div>
+  </section>
+
+  <!-- ============ CATÁLOGO ============ -->
+  <main id="catalogo" class="container">
+    <div class="section-title reveal">
+      <h2>Nuestros productos</h2>
+      <p>Pequeños detalles, gran impacto.</p>
+    </div>
+    <div class="search reveal">
+      <input type="search" id="search" placeholder="Buscar producto o categoría…" aria-label="Buscar producto">
+    </div>
+    <!-- Botones de categoría: se generan solos desde la lista "categories" -->
+    <div class="filters reveal" id="filters"></div>
+    <!-- Las tarjetas se generan automáticamente desde la lista "products" -->
+    <div class="grid" id="productGrid"></div>
+
+    <!-- ============ DISEÑO PERSONALIZADO ============ -->
+    <section class="custom reveal" id="personalizado">
+      <h2>¿Tienes una idea?<br><span class="grad-text">La hacemos realidad.</span></h2>
+      <p>Cuéntanos qué quieres crear y diseñamos tu pieza en 3D.</p>
+      <a class="btn" id="customLink" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+    </section>
+  </main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="container">
+
+    <p><strong>Zignia 3D</strong> · Digital Creation Studio</p>
+    <p>Unlimited creative possibilities</p>
+
+    <strong>· Siguenos en nuestras redes sociales ·</strong>
+
+    <div class="social-links">
+
+      <!-- TIKTOK -->
+      <a href="https://www.tiktok.com/@zignia3d?_r=1&_t=ZS-9Axz8GpLqsc"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="social-pill tiktok">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="20"
+             height="20"
+             viewBox="0 0 24 24"
+             fill="currentColor">
+          <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.717h-3.277v13.907a2.728 2.728 0 1 1-2.728-2.728c.226 0 .445.027.655.077V9.896a6.002 6.002 0 0 0-.655-.036A6.005 6.005 0 1 0 15.82 15.87V8.843a8.056 8.056 0 0 0 4.77 1.55V7.116c-.34 0-.675-.147-1.001-.43z"/>
+        </svg>
+
+        @zignia3d
+      </a>
+
+      <!-- INSTAGRAM -->
+      <a href="https://www.instagram.com/zignia3d"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="social-pill insta">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="20"
+             height="20"
+             viewBox="0 0 24 24"
+             fill="currentColor">
+          <path d="M7.75 2C4.574 2 2 4.574 2 7.75v8.5C2 19.426 4.574 22 7.75 22h8.5C19.426 22 22 19.426 22 16.25v-8.5C22 4.574 19.426 2 16.25 2h-8.5Zm0 2h8.5A3.75 3.75 0 0 1 20 7.75v8.5A3.75 3.75 0 0 1 16.25 20h-8.5A3.75 3.75 0 0 1 4 16.25v-8.5A3.75 3.75 0 0 1 7.75 4Zm9.5 1a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/>
+        </svg>
+
+        @zignia3d
+      </a>
+
+    </div>
+
+  </div>
+</footer>
+
+  <!-- ============ CARRITO ============ -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Carrito de compras">
+    <header>
+      <h3>Tu pedido</h3>
+      <button class="close" id="closeCart" aria-label="Cerrar">&times;</button>
+    </header>
+    <div class="items" id="cartItems"></div>
+    <footer>
+      <div class="total"><span>Total</span><span id="cartTotal">$0</span></div>
+      <a class="checkout" id="checkout" target="_blank" rel="noopener" aria-disabled="true">Enviar pedido por WhatsApp</a>
+    </footer>
+  </aside>
+
+  <!-- ============ BOTÓN FLOTANTE WHATSAPP ============ -->
+  <a class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.100L2 22l5-1.300A10 10 0 1 0 12 2zm5.200 14.200c-.2.600-1.300 1.200-1.800 1.300-.5.100-1 .1-1.700-.1-.4-.1-.9-.3-1.600-.6-2.800-1.200-4.600-4-4.700-4.200-.1-.2-1.100-1.400-1.100-2.700s.7-1.900.9-2.200c.2-.2.500-.3.700-.3h.5c.2 0 .4 0 .6.500.2.500.8 1.800.8 1.900.1.100.1.300 0 .5l-.3.500-.4.500c-.1.100-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.400 2.400 1.500.3.100.5.100.6-.1l.8-1c.2-.3.400-.2.700-.1l1.900.9c.3.100.5.200.5.300.1.100.1.700-.1 1.200z"/></svg>
+  </a>
+
+  <script>
+    /* ==========================================================
+       CONFIGURACIÓN
+       ========================================================== */
+    const WHATSAPP = "573227847494";   // +57 3227847494
+
+    /* ==========================================================
+       ★ TEMA ACTIVO — AQUÍ ACTIVAS O DESACTIVAS UNA TEMPORADA ★
+       "default"    → página normal
+       "halloween"  → mes de brujas
+       "navidad"    → Navidad
+       "auto"       → se activa solo según las fechas de cada tema (ver "dates")
+       Para probar sin cambiar nada, abre tu página con  ?admin  al final
+       (ej. index.html?admin) y usa los botones de abajo a la izquierda.
+       ========================================================== */
+    const THEME = "auto";
+
+    /* ----------------------------------------------------------
+       DEFINICIÓN DE LOS TEMAS (los colores están en el CSS, sección
+       "TEMAS DE TEMPORADA"). Todo lo que dejes vacío ("") se queda
+       con el texto normal de la página.
+       dates     → fechas del modo "auto"  (mes-día)
+       promo     → texto de la barra de anuncio de arriba
+       eyebrow, title1, title2, sub → textos del hero
+       particles → emojis que flotan por la pantalla
+       motion    → "fall" (caen, como nieve) o "rise" (suben, como espíritus)
+       ---------------------------------------------------------- */
+    const themes = {
+      default: { label: "Normal" },
+
+      halloween: {
+        label: "Halloween",
+        dates: { from: "10-01", to: "11-02" },
+        promo: "🎃 Mes de brujas · Figuras que dan miedo… y mucho cariño",
+        eyebrow: "Especial Halloween",
+        title1: "Noches de brujas.",
+        title2: "Figuras con mucho susto.",
+        sub: "Fantasmas, calabazas y personajes que cuidarán tu morral esta temporada.",
+        particles: ["🦇", "🎃", "👻"],
+        motion: "rise"
+      },
+
+      navidad: {
+        label: "Navidad",
+        dates: { from: "12-01", to: "01-06" },
+        promo: "🎄 Especial de Navidad · Regalos únicos hechos en 3D",
+        eyebrow: "Especial Navidad",
+        title1: "Regala algo único.",
+        title2: "Hecho en 3D para ti.",
+        sub: "Figuras y detalles personalizados para sorprender en estas fiestas.",
+        particles: ["❄", "🎄", "⭐"],
+        motion: "fall"
+      }
+      // , sanvalentin: { label: "San Valentín", dates: { from: "02-01", to: "02-15" }, promo: "💜 ...", particles: ["💜"], motion: "fall" }
+    };
+
+    /* ==========================================================
+       PRODUCTOS — aquí agregas, editas o borras productos.
+       Cada producto es un bloque { ... } separado por coma.
+
+       IMÁGENES: guarda tus fotos en una carpeta "img/" junto a
+       este archivo y escribe la ruta en el campo "image".
+       Recomendado: PNG con fondo transparente, 800x800 px.
+       ========================================================== */
+    /* ----------------------------------------------------------
+       CATEGORÍAS
+       Para agregar una categoría nueva:
+       1) Añade una línea aquí:  { id: "figuras", label: "Figuras" }
+       2) En cada producto de esa categoría escribe: category: "figuras"
+       El botón de filtro y la búsqueda por nombre de categoría
+       se crean solos.
+       ---------------------------------------------------------- */
+    const categories = [
+      { id: "pokemon",  label: "Pokémon"    },
+      { id: "llaveros", label: "Llaveros"   },
+      { id: "nfc",      label: "Stands NFC" }
+      // , { id: "nueva-categoria", label: "Nueva categoría" }
+    ];
+
+    const products = [
+      {
+        name:    "Charizard",
+        tagline: "Fuego y poder en tu escritorio.",
+        size:    "4 x 4 cm",
+        price:   3500,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image:   "img/charizard.png"      // <<< IMAGEN DE CHARIZARD
+      },
+      {
+        name:    "Charmander Mini",
+        tagline: "Pequeño, pero con gran fuego.",
+        size:    "5 x 5 cm",
+        price:   3500,                    // <<< AJUSTA EL PRECIO REAL
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image:   "img/charmander.png"     // <<< IMAGEN DE CHARMANDER
+      },
+      {
+        name: "Bulbasaur",
+        tagline: "Naturaleza en tus manos",
+        size: "5 x 4 cm",
+        price: 3500,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/bulbasaur.png"
+      },
+      {
+        name: "Meowth",
+        tagline: "Poder y elegancia",
+        size: "5 x 4 cm",
+        price: 4000,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/meowth.png"
+      },
+       {
+        name: "Picachu",
+        tagline: "Tierno y coleccionable",
+        size: "4 x 4 cm",
+        price: 3000,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/picachu.png"
+      },
+      {
+        name: "Squirtle",
+        tagline: "pequeño y aventurero",
+        size: "5 x 5 cm",
+        price: 3000,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/squirtle.png"
+      },
+      {
+        name: "Gasper",
+        tagline: "No te fies de lo tierno por que este pequeñin asusta en tu morral",
+        size: "5 x 4 cm",
+        price: 4000,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/gasper.png"
+      },
+      {
+        name: "Gasparin",
+        tagline: "Un acompañante pequeño que ahuyentara los espiritus del halloween",
+        size: "5 x 4 cm",
+        price: 4000,
+        category: "pokemon",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/gasparin.png"
+      },
+      {
+        name: "Gasparin",
+        tagline: "Un acompañante pequeño que ahuyentara los espiritus del halloween",
+        size: "5 x 4 cm",
+        price: 4000,
+        category: "llaveros",   // <<< CATEGORÍA (id de la lista "categories")
+        image: "img/llavero1.png"
+      },
+      // , { name: "Nuevo producto", tagline: "...", size: "0 x 0 cm", price: 0, category: "llaveros", image: "img/nuevo.png" }
+    ];
+
+    /* ==========================================================
+       A PARTIR DE AQUÍ NO NECESITAS TOCAR NADA
+       ========================================================== */
+    const $ = id => document.getElementById(id);
+    const cop = n => "$" + new Intl.NumberFormat("es-CO").format(n);
+    const wa = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+
+    /* ---------- Enlaces de WhatsApp ---------- */
+    $("waFloat").href = wa("Hola Zignia 3D, quiero más información.");
+    $("customLink").href = wa("Hola Zignia 3D, quiero cotizar un diseño personalizado.");
+
+    /* ---------- Catálogo + búsqueda ---------- */
+    let activeCat = "all";                                   // categoría seleccionada
+    const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");  // ignora tildes
+    const catLabel = id => (categories.find(c => c.id === id) || {}).label || "";
+
+    function renderFilters() {
+      $("filters").innerHTML = [{ id: "all", label: "Todos" }, ...categories].map(c =>
+        `<button class="filter${c.id === activeCat ? " active" : ""}" data-cat="${c.id}">${c.label}</button>`).join("");
+    }
+
+    function renderProducts() {
+      const filter = $("search").value;
+      const q = norm(filter.trim());
+      const list = products.map((p, i) => ({ ...p, i }))
+        .filter(p => activeCat === "all" || p.category === activeCat)
+        .filter(p => norm(p.name + " " + p.tagline + " " + catLabel(p.category)).includes(q));
+
+      $("productGrid").innerHTML = list.length ? list.map(p => `
+        <article class="card reveal">
+          <div class="stage"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>
+          <h3>${p.name}</h3>
+          <p class="tagline">${p.tagline}</p>
+          <span class="chip">Medidas <b>${p.size}</b></span>
+          <p class="price">${cop(p.price)}<small>COP</small></p>
+          <div class="card-actions">
+            <button class="add" data-add="${p.i}">Agregar al pedido</button>
+            <a class="ask" href="${wa("Hola Zignia 3D, quiero información sobre: " + p.name)}" target="_blank" rel="noopener">Preguntar</a>
+          </div>
+        </article>`).join("")
+        : `<p class="empty">${q ? `No encontramos productos con "${filter}".` : "Muy pronto tendremos productos en esta categoría."}</p>`;
+      observe();
+    }
+    $("search").addEventListener("input", renderProducts);
+    $("filters").addEventListener("click", e => {
+      const btn = e.target.closest("[data-cat]");
+      if (!btn) return;
+      activeCat = btn.dataset.cat;
+      renderFilters();
+      renderProducts();
+    });
+
+    /* ---------- Carrito ---------- */
+    let cart = {};                       // { indiceProducto: cantidad }
+    try { cart = JSON.parse(localStorage.getItem("zignia-cart")) || {}; } catch (e) {}
+
+    function renderCart() {
+      const ids = Object.keys(cart).filter(i => products[i] && cart[i] > 0);
+      const count = ids.reduce((s, i) => s + cart[i], 0);
+      const total = ids.reduce((s, i) => s + cart[i] * products[i].price, 0);
+
+      $("cartCount").textContent = count;
+      $("cartTotal").textContent = cop(total);
+      $("cartItems").innerHTML = ids.length ? ids.map(i => `
+        <div class="item">
+          <img src="${products[i].image}" alt="">
+          <div>
+            <b>${products[i].name}</b>
+            <small>${cop(products[i].price)} c/u</small>
+            <div class="qty">
+              <button data-dec="${i}" aria-label="Quitar uno">−</button>
+              <span>${cart[i]}</span>
+              <button data-inc="${i}" aria-label="Agregar uno">+</button>
+            </div>
+          </div>
+          <b>${cop(cart[i] * products[i].price)}</b>
+        </div>`).join("")
+        : `<p class="cart-empty">Tu carrito está vacío.</p>`;
+
+      /* Mensaje de pedido para WhatsApp */
+      const lines = ids.map(i => `• ${cart[i]} x ${products[i].name} (${products[i].size}) — ${cop(cart[i] * products[i].price)}`);
+      const checkout = $("checkout");
+      checkout.setAttribute("aria-disabled", ids.length ? "false" : "true");
+      checkout.href = ids.length
+        ? wa(`Hola Zignia 3D, quiero hacer este pedido:\n\n${lines.join("\n")}\n\nTotal: ${cop(total)} COP`)
+        : "#";
+
+      try { localStorage.setItem("zignia-cart", JSON.stringify(cart)); } catch (e) {}
+    }
+
+    const toggleCart = open => {
+      $("drawer").classList.toggle("open", open);
+      $("overlay").classList.toggle("open", open);
+    };
+    $("openCart").onclick = () => toggleCart(true);
+    $("closeCart").onclick = $("overlay").onclick = () => toggleCart(false);
+    document.addEventListener("keydown", e => e.key === "Escape" && toggleCart(false));
+
+    document.addEventListener("click", e => {
+      const add = e.target.closest("[data-add]");
+      const inc = e.target.closest("[data-inc]");
+      const dec = e.target.closest("[data-dec]");
+      if (add) {
+        const i = add.dataset.add;
+        cart[i] = (cart[i] || 0) + 1;
+        add.textContent = "¡Agregado!"; add.classList.add("done");
+        setTimeout(() => { add.textContent = "Agregar al pedido"; add.classList.remove("done"); }, 1200);
+      }
+      if (inc) cart[inc.dataset.inc]++;
+      if (dec) { const i = dec.dataset.dec; cart[i] = Math.max(0, cart[i] - 1); }
+      if (add || inc || dec) renderCart();
+    });
+
+    /* ---------- Animación al hacer scroll ---------- */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: .12 });
+    function observe() { document.querySelectorAll(".reveal:not(.in)").forEach(el => io.observe(el)); }
+
+    /* ---------- Sistema de temas (no necesitas tocar esto) ---------- */
+    const defaults = {                      // textos originales del hero, para poder volver al tema normal
+      eyebrow: $("heroEyebrow").textContent, title1: $("heroTitle1").textContent,
+      title2:  $("heroTitle2").textContent,  sub: $("heroSub").textContent
+    };
+
+    function themeFromDate() {              // modo "auto": busca el tema cuyas fechas incluyen hoy
+      const d = new Date(), md = String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      for (const [id, t] of Object.entries(themes)) {
+        if (!t.dates) continue;
+        const { from, to } = t.dates;
+        if (from <= to ? (md >= from && md <= to) : (md >= from || md <= to)) return id;
+      }
+      return "default";
+    }
+
+    function applyTheme(id) {
+      const t = themes[id] || themes.default;
+      document.documentElement.dataset.theme = id;
+
+      $("heroEyebrow").textContent = t.eyebrow || defaults.eyebrow;
+      $("heroTitle1").textContent  = t.title1  || defaults.title1;
+      $("heroTitle2").textContent  = t.title2  || defaults.title2;
+      $("heroSub").textContent     = t.sub     || defaults.sub;
+
+      $("promo").hidden = !t.promo;
+      $("promo").textContent = t.promo || "";
+
+      document.querySelector(".fx")?.remove();           // partículas
+      if (t.particles) {
+        const fx = document.createElement("div");
+        fx.className = "fx " + (t.motion === "rise" ? "rise" : "fall");
+        fx.setAttribute("aria-hidden", "true");
+        for (let i = 0; i < 16; i++) {                   // cantidad de partículas
+          const p = document.createElement("span");
+          p.textContent = t.particles[i % t.particles.length];
+          p.style.cssText = `--x:${Math.random() * 100}vw; --s:${14 + Math.random() * 16}px; ` +
+            `--d:${14 + Math.random() * 14}s; --delay:${-Math.random() * 20}s; --sway:${(Math.random() - .5) * 120}px`;
+          fx.appendChild(p);
+        }
+        document.body.appendChild(fx);
+      }
+      document.querySelectorAll(".theme-panel button").forEach(b => b.classList.toggle("active", b.dataset.theme === id));
+    }
+
+    const params = new URLSearchParams(location.search);
+    const requested = params.get("tema") || THEME;       // ?tema=navidad sirve para previsualizar
+    applyTheme(requested === "auto" ? themeFromDate() : requested);
+
+    if (params.has("admin")) {                           // panel de pruebas
+      const panel = document.createElement("div");
+      panel.className = "theme-panel";
+      panel.innerHTML = Object.entries(themes).map(([id, t]) => `<button data-theme="${id}">${t.label}</button>`).join("");
+      panel.addEventListener("click", e => { const b = e.target.closest("[data-theme]"); if (b) applyTheme(b.dataset.theme); });
+      document.body.appendChild(panel);
+      applyTheme(document.documentElement.dataset.theme);
+    }
+
+    /* ---------- Efectos del hero: parallax + inclinación 3D con el mouse ---------- */
+    (function () {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const bg = $("heroBg"), z = $("heroZ");
+      let ticking = false;
+      addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          bg.style.setProperty("--py", Math.min(scrollY, 900) * 0.25 + "px");   // velocidad del parallax
+          ticking = false;
+        });
+      }, { passive: true });
+
+      if (matchMedia("(pointer: fine)").matches) {                           // solo en computador
+        addEventListener("pointermove", e => {
+          const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+          z.style.setProperty("--ry", (x * 10) + "deg");                      // fuerza de la inclinación
+          z.style.setProperty("--rx", (-y * 8) + "deg");
+        }, { passive: true });
+      }
+    })();
+
+    /* ---------- Inicio ---------- */
+    renderFilters();
+    renderProducts();
+    renderCart();
+    observe();
+  </script>
+</body>
+</html>
