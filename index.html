@@ -553,7 +553,7 @@
 
       navidad: {
         label: "Navidad",
-        dates: { from: "12-01", to: "01-06" },
+        dates: { from: "11-15", to: "01-06" },
         promo: "🎄 Especial de Navidad · Regalos únicos hechos en 3D",
         eyebrow: "Especial Navidad",
         title1: "Regala algo único.",
@@ -584,11 +584,31 @@
     const categories = [
       { id: "pokemon",  label: "Pokémon"    },
       { id: "llaveros", label: "Llaveros"   },
-      { id: "nfc",      label: "Stands NFC" }
+      { id: "nfc",      label: "Stands NFC" },
+      {id: "motos", label: "Acompañantes de ruta"}
       // , { id: "nueva-categoria", label: "Nueva categoría" }
     ];
 
     const products = [
+      {
+        name:    "Tom la lagartija",
+        tagline: "Carisma y diversión en un compañero de ruta (incluye base anti-robo)",
+        size:    "9 x 9 cm",
+        price:   30000,
+        category: "motos",   // <<< CATEGORÍA (id de la lista "categories")
+        image:   "img/tom_catalogo.png"      // <<< Lagarto tom
+      },
+      {
+        name: "Stand NFC",
+        tagline: `<strong>⭐ ¡Convierte cada cliente en una reseña para tu negocio!</strong>
+                  Facilita que tus clientes dejen opiniones en Google con solo acercar su celular o escanear un código QR.
+                  Integra también tus redes sociales, WhatsApp, catálogo digital y medios de pago en un solo stand.
+
+      <strong>🚀 Más reseñas, mayor confianza y más oportunidades de venta.</strong>`,
+          price: 149900,
+          category: "nfc",
+          image: "img/stand_nfc.png"
+      },
       {
         name:    "Charizard",
         tagline: "Fuego y poder en tu escritorio.",
